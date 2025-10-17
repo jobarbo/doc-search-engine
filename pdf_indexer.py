@@ -349,7 +349,7 @@ def search_index(query_text, pdf_dir_key="main", exact_match=False):
                             text = text.replace(""", '"').replace(""", '"')  # Curly quotes
                             text = text.replace("«", '"').replace("»", '"')  # French quotes
                             return text
-                        
+
                         query_lower = normalize_text(query_text.lower())
                         content_lower = normalize_text(content.lower())
                         print(f"DEBUG: Looking for exact match of '{query_lower[:50]}...' in content")

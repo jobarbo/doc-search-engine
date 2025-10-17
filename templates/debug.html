@@ -1,0 +1,77 @@
+{% extends 'base.html' %} {% block title %}Debug Information - PDF Search{% endblock %} {% block content %}
+<div class="debug-container">
+	<h2>Debug Information</h2>
+
+	<div class="folder-selector">
+		<form action="{{ url_for('debug_info') }}" method="get" class="folder-form">
+			<label for="folder">Select PDF Folder:</label>
+			<select name="folder" id="folder" onchange="this.form.submit()">
+				{% for folder_key, folder_path in folders %}
+				<option value="{{ folder_key }}" {% if selected_folder == folder_key %}selected{% endif %}>
+					{{ folder_key }} ({{ folder_path }})
+				</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
+
+	<div class="debug-section">
+		<h3>Parent PDF Directory</h3>
+		<p>Directory: <code>{{ debug.parent_directory }}</code></p>
+		<p>Directory Exists: <strong>{{ debug.parent_directory_exists }}</strong></p>
+	</div>
+
+	<div class="debug-section">
+		<h3>PDF Files ({{ selected_folder }})</h3>
+		<p>PDF Directory: <code>{{ debug.pdf_directory }}</code></p>
+		<p>Directory Exists: <strong>{{ debug.pdf_directory_exists }}</strong></p>
+
+		{% if debug.pdf_files %}
+		<p>Found {{ debug.pdf_files|length }} PDF files:</p>
+		<ul class="pdf-list">
+			{% for pdf_file in debug.pdf_files %}
+			<li>
+				<a href="{{ url_for('view_pdf', filename=pdf_file, folder=selected_folder) }}" target="_blank">{{ pdf_file }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<div class="warning-message">
+			<p>No PDF files found in this folder. Please add PDF files to the <code>{{ debug.pdf_directory }}</code> folder.</p>
+		</div>
+		{% endif %}
+	</div>
+
+	<div class="debug-section">
+		<h3>Search Index ({{ selected_folder }})</h3>
+		<p>Index Directory: <code>{{ debug.index_directory }}</code></p>
+		<p>Index Exists: <strong>{{ debug.index_exists }}</strong></p>
+		<p>
+			<a href="{{ url_for('rebuild_index', folder=selected_folder) }}" class="action-button">Rebuild Index</a>
+		</p>
+	</div>
+
+	<div class="debug-section">
+		<h3>Available Folders</h3>
+		<ul class="folder-list">
+			{% for folder_key, folder_path in debug.available_folders %}
+			<li>
+				<strong>{{ folder_key }}</strong>: <code>{{ folder_path }}</code>
+				<a href="{{ url_for('debug_info', folder=folder_key) }}">(View)</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+	<div class="debug-section">
+		<h3>System Information</h3>
+		<p>Python Version: <code>{{ debug.python_version }}</code></p>
+		<p>Flask Version: <code>{{ debug.flask_version }}</code></p>
+		<p>Whoosh Version: <code>{{ debug.whoosh_version }}</code></p>
+	</div>
+
+	<div class="back-link">
+		<a href="{{ url_for('index', folder=selected_folder) }}">Back to Search</a>
+	</div>
+</div>
+{% endblock %}

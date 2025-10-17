@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{{ filename }} - Page {{ page }}</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				font-family: Arial, sans-serif;
+			}
+			.pdf-container {
+				width: 100vw;
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+			}
+			.header {
+				background-color: #2c3e50;
+				color: white;
+				padding: 10px 20px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.header h1 {
+				margin: 0;
+				font-size: 1.2rem;
+			}
+			.header a {
+				color: white;
+				text-decoration: none;
+				padding: 5px 10px;
+				background-color: #3498db;
+				border-radius: 4px;
+			}
+			.header a:hover {
+				background-color: #2980b9;
+			}
+			iframe {
+				flex: 1;
+				border: none;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="pdf-container">
+			<div class="header">
+				<h1>{{ filename }} - Page {{ page }}</h1>
+				<a href="javascript:history.back()">← Back to Search Results</a>
+			</div>
+			<iframe src="{{ url_for('serve_pdf', folder=folder, filename=filename) }}#page={{ page }}" type="application/pdf">
+				<p>Your browser does not support PDFs. <a href="{{ url_for('serve_pdf', folder=folder, filename=filename) }}">Download the PDF</a> instead.</p>
+			</iframe>
+		</div>
+	</body>
+</html>

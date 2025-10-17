@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{% block title %}PDF Search{% endblock %}</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<h1><a href="{{ url_for('index') }}">GiGi's University PDF Search</a></h1>
+				<nav>
+					<ul>
+						<li><a href="{{ url_for('index') }}">Home</a></li>
+						<li><a href="{{ url_for('rebuild_index', folder=selected_folder if selected_folder else 'main') }}">Rebuild Index</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+
+		<main class="container">
+			{% if error %}
+			<div class="alert alert-error">{{ error }}</div>
+			{% endif %} {% if success %}
+			<div class="alert alert-success">{{ success }}</div>
+			{% endif %} {% block content %}{% endblock %}
+		</main>
+
+		<footer>
+			<div class="container">
+				<p>&copy; {{ now.year }} PDF Search - A simple tool to search through PDF files</p>
+			</div>
+		</footer>
+	</body>
+</html>

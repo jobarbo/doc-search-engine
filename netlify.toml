@@ -1,0 +1,14 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+  
+[build.environment]
+  PYTHON_VERSION = "3.9"
+
+[functions]
+  included_files = ["./templates/**", "./pdf_index_main/**", "./pdf_index_other/**"]
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/api"
+  status = 200

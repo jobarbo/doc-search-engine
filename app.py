@@ -34,6 +34,9 @@ def index():
     # Check if the index exists, if not, build it
     index_dir = f"pdf_index_{folder}"
     if not os.path.exists(index_dir):
+        if os.environ.get('AWS_LAMBDA_FUNCTION_NAME') is not None or os.environ.get('NETLIFY') == 'true':
+            return render_template('index.html', error=f"Index for {folder} does not exist. Cannot build in production.", selected_folder=folder)
+            
         try:
             pdf_indexer.build_index(folder)
         except Exception as e:
@@ -105,11 +108,8 @@ def view_pdf(filename):
             app.logger.info(f"Viewing PDF: {filename} from folder: {folder}, opening at page: {page}")
             return render_template('view_pdf.html', filename=filename, folder=folder, page=page)
         else:
-            # Direct file serving for backward compatibility
-            pdf_dir = pdf_indexer.PDF_DIRS.get(folder, pdf_indexer.DEFAULT_PDF_DIR)
-            pdf_path = os.path.join(pdf_dir, filename)
-            app.logger.info(f"Serving PDF: {pdf_path} from folder: {folder}")
-            return send_file(pdf_path, as_attachment=False)
+            # Direct redirect to the static CDN path
+            return redirect(f"/pdfs/{folder}/{filename}")
     except Exception as e:
         app.logger.error(f"Error opening file: {str(e)}")
         return f"Error opening file: {str(e)}"
@@ -117,17 +117,16 @@ def view_pdf(filename):
 @app.route('/pdf/<folder>/<filename>')
 def serve_pdf(folder, filename):
     """Serve the actual PDF file"""
-    try:
-        pdf_dir = pdf_indexer.PDF_DIRS.get(folder, pdf_indexer.DEFAULT_PDF_DIR)
-        pdf_path = os.path.join(pdf_dir, filename)
-        return send_file(pdf_path, as_attachment=False, mimetype='application/pdf')
-    except Exception as e:
-        app.logger.error(f"Error serving PDF: {str(e)}")
-        return f"Error serving PDF: {str(e)}"
+    return redirect(f"/pdfs/{folder}/{filename}")
 
 @app.route('/rebuild-index')
 def rebuild_index():
     """Rebuild the search index"""
+    # Netlify functions have a read-only filesystem
+    if os.environ.get('AWS_LAMBDA_FUNCTION_NAME') is not None or os.environ.get('NETLIFY') == 'true':
+        folder = request.args.get('folder', 'main')
+        return render_template('index.html', error=f"Rebuilding index is disabled in production due to read-only filesystem. Please build locally and push.", selected_folder=folder)
+        
     try:
         folder = request.args.get('folder', 'main')
         app.logger.info(f"Rebuilding index for folder: {folder}...")

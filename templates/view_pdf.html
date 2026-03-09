@@ -52,8 +52,8 @@
 				<h1>{{ filename }} - Page {{ page }}</h1>
 				<a href="javascript:history.back()">← Back to Search Results</a>
 			</div>
-			<iframe src="{{ url_for('serve_pdf', folder=folder, filename=filename) }}#page={{ page }}" type="application/pdf">
-				<p>Your browser does not support PDFs. <a href="{{ url_for('serve_pdf', folder=folder, filename=filename) }}">Download the PDF</a> instead.</p>
+			<iframe src="/pdfs/{{ folder }}/{{ filename }}#page={{ page }}" type="application/pdf">
+				<p>Your browser does not support PDFs. <a href="/pdfs/{{ folder }}/{{ filename }}">Download the PDF</a> instead.</p>
 			</iframe>
 		</div>
 	</body>

@@ -12,20 +12,18 @@ from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
 import shutil
 from whoosh.analysis import StemmingAnalyzer
 import tempfile
-import pytesseract
-from pdf2image import convert_from_path
 
 # Define the PDF directories
 PDF_DIRS = {
-    "main": "pdfs/main",
-    "other": "pdfs/other"
+    "main": "public/pdfs/main",
+    "other": "public/pdfs/other"
 }
 
 # Parent PDF directory
-PDF_PARENT_DIR = "pdfs"
+PDF_PARENT_DIR = "public/pdfs"
 
 # Default PDF directory
-DEFAULT_PDF_DIR = "pdfs/main"
+DEFAULT_PDF_DIR = "public/pdfs/main"
 
 def extract_text_from_pdf(file_path):
     """Extract text from all pages of a PDF file, using OCR if needed"""
@@ -42,42 +40,15 @@ def extract_text_from_pdf(file_path):
                 if page_text:
                     text += f"Page {i+1}:\n{page_text}\n\n"
 
-        # If no text was extracted, try OCR
+        # If no text was extracted, we just return empty
         if not text.strip():
-            print(f"No text extracted from {file_path}, trying OCR...")
-            text = extract_text_with_ocr(file_path)
+            print(f"No text extracted from {file_path}")
 
         return text
     except Exception as e:
         print(f"Error extracting text from {file_path}: {str(e)}")
         return ""
 
-def extract_text_with_ocr(pdf_path):
-    """Extract text from PDF using OCR"""
-    try:
-        text = ""
-        # Create a temporary directory for the images
-        with tempfile.TemporaryDirectory() as temp_dir:
-            # Convert PDF to images
-            print(f"Converting PDF to images: {pdf_path}")
-            images = convert_from_path(pdf_path)
-
-            # Process each page
-            for i, image in enumerate(images):
-                # Save the image temporarily
-                image_path = os.path.join(temp_dir, f'page_{i+1}.png')
-                image.save(image_path, 'PNG')
-
-                # Extract text using OCR
-                print(f"Performing OCR on page {i+1}/{len(images)}")
-                page_text = pytesseract.image_to_string(image_path)
-                if page_text:
-                    text += f"Page {i+1}:\n{page_text}\n\n"
-
-        return text
-    except Exception as e:
-        print(f"OCR error for {pdf_path}: {str(e)}")
-        return ""
 
 def build_index(pdf_dir_key="main"):
     """Build or rebuild the search index from all PDF files in the specified directory"""

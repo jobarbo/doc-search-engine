@@ -9,6 +9,16 @@
   included_files = ["./templates/**", "./pdf_index_main/**", "./pdf_index_other/**"]
 
 [[redirects]]
+  from = "/pdfs/*"
+  to = "/pdfs/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/static/*"
+  to = "/static/:splat"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/.netlify/functions/api"
   status = 200

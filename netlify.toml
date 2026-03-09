@@ -6,7 +6,7 @@
   PYTHON_VERSION = "3.9"
 
 [functions]
-  included_files = ["./templates/**", "./pdf_index_main/**", "./pdf_index_other/**"]
+  included_files = ["./templates/**", "./pdf_index_main/**", "./pdf_index_other/**", "./app.py", "./pdf_indexer.py"]
 
 [[redirects]]
   from = "/pdfs/*"

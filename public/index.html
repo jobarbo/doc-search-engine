@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Search Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PDF Search Engine</h1>
+            <p>Instantly search through all your indexed PDFs.</p>
+        </header>
+
+        <main>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Type to search..." autofocus>
+                
+                <div class="search-options">
+                    <label>
+                        <input type="checkbox" id="exact-match"> Exact match
+                    </label>
+                    <label>
+                        Folder:
+                        <select id="folder-select">
+                            <option value="all">All Folders</option>
+                            <option value="main">Main</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div id="loading" class="hidden">Loading index...</div>
+            <div id="results-meta" class="hidden"></div>
+            
+            <div id="results-container"></div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

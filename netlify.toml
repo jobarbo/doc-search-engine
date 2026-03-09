@@ -1,25 +1,2 @@
 [build]
   publish = "public"
-  functions = "netlify/functions"
-  
-[build.environment]
-  PYTHON_VERSION = "3.9"
-
-[functions]
-  included_files = ["./templates/**", "./pdf_index_main/**", "./pdf_index_other/**", "./app.py", "./pdf_indexer.py"]
-
-[[redirects]]
-  from = "/pdfs/*"
-  to = "/pdfs/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/static/*"
-  to = "/static/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/api"
-  status = 200
-  force = true
